@@ -32,9 +32,12 @@ namespace FixedWindowAlgorithm
             }
             
             Console.WriteLine(_current);
+            Console.WriteLine("sleep 1s");
+            Thread.Sleep(2000);
+            Console.WriteLine(FixedWindow());
         }
 
-        static long FixedWindow()
+        public static long FixedWindow()
         {
             var now = DateTimeOffset.Now.ToUnixTimeSeconds();
             var ct = Interlocked.Read(ref _currentTime);
@@ -42,7 +45,7 @@ namespace FixedWindowAlgorithm
             {
                 if (Interlocked.CompareExchange(ref _currentTime, now, ct)==ct)
                 {
-                    return Interlocked.Exchange(ref _current, 0);
+                    Interlocked.Exchange(ref _current, 0);
                 }
             }
             
