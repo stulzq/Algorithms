@@ -9,6 +9,7 @@ namespace FixedWindowAlgorithm
         private static long _currentTime;
         private static long _current;
         private static Semaphore _semaphore = new Semaphore(0, 10);
+
         static void Main(string[] args)
         {
             _currentTime = DateTimeOffset.Now.ToUnixTimeSeconds();
@@ -30,9 +31,9 @@ namespace FixedWindowAlgorithm
             {
                 _semaphore.WaitOne();
             }
-            
+
             Console.WriteLine(_current);
-            Console.WriteLine("sleep 1s");
+            Console.WriteLine("sleep 2s");
             Thread.Sleep(2000);
             Console.WriteLine(FixedWindow());
         }
@@ -43,12 +44,12 @@ namespace FixedWindowAlgorithm
             var ct = Interlocked.Read(ref _currentTime);
             if (now > ct)
             {
-                if (Interlocked.CompareExchange(ref _currentTime, now, ct)==ct)
+                if (Interlocked.CompareExchange(ref _currentTime, now, ct) == ct)
                 {
                     Interlocked.Exchange(ref _current, 0);
                 }
             }
-            
+
             return Interlocked.Increment(ref _current);
         }
     }
